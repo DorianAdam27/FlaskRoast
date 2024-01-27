@@ -1,0 +1,76 @@
+<html>
+    <head>
+        <title>Get Roasted</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />        
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <section>
+            <div class="container">
+                <div class="row">
+                    <span>
+                        {% with messages_before = messages[:messages|length//2] %}
+                            {% if messages_before %}
+                                <ul>
+                                    {% for message in messages_before %}
+                                        <li><h3>{{ message }}</h3></li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+                    </span>
+                    <span>
+                        {% with messages_after = messages[messages|length//2:] %}
+                            {% if messages_after %}
+                                <ul>
+                                    {% for message in messages_after %}
+                                        <li><h3>{{ message }}</h3></li>
+                                    {% endfor %}
+                                </ul>
+                            {%endif %}
+                        {% endwith %}
+                    </span>
+                    <form class="form" method="post" action="#" enctype="multipart/form-data">
+                        <dl>
+                            <p>
+                                <input id="imageInput" type="file" name="file" class="form-control" autocomplete="off" required onchange="displayImage()">
+                            </p>
+                        </dl>
+                        <p>
+                            <div style="text-align:center;">
+                                <input type="submit" value="Submit" class="btn btn-info">
+                            </div>
+                        </p>
+                        <div>
+                            {% if not filename %}
+                                <img id="selectedImage" src="#" style="display: none;">
+                            {% endif %}
+                            {% if filename %}
+                                <img id="selectedImage" src="{{ url_for('display_image', filename=filename) }}">
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <script>
+            function displayImage() {
+                var input = document.getElementById('imageInput');
+                var image = document.getElementById('selectedImage');
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        image.src = e.target.result;
+                        image.style.display = 'block';
+                    };
+
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
+    </body>
+</html>
